@@ -2,6 +2,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "MultiGASCharacter.h"
 #include "Camera/CameraComponent.h"
 
 AWeapon::AWeapon()

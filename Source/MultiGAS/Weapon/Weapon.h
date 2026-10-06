@@ -1,11 +1,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MultiGASCharacter.h"
+#include "AbilitySystemInterface.h"
 #include "GameFramework/Actor.h"
 #include "GASStats/WeaponStats.h"
 #include "Weapon/Mag.h"
 #include "Weapon.generated.h"
+
+class AMultiGASCharacter;
 
 UCLASS()
 class MULTIGAS_API AWeapon : public AActor, public IAbilitySystemInterface

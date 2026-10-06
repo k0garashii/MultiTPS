@@ -18,7 +18,7 @@ public:
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")
-	UBullet* Bullet = nullptr;
+	UBullet* Bullet;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")
 	int NumBullets = 30;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")

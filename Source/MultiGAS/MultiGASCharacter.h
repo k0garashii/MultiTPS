@@ -79,12 +79,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS")
 	TArray<TSubclassOf<UGameplayEffect>> Effects;
 
-protected:
 	UPROPERTY(EditAnywhere, Category="Weapon")
-	AWeapon* Weapon = nullptr;
+	TSubclassOf<AWeapon> Weapon = nullptr;
 	
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+	UPROPERTY()
 	UPlayerStats* Stats = nullptr;
 };
 

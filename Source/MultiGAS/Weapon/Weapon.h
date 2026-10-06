@@ -42,11 +42,11 @@ public:
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")
-	UMag* Mag = nullptr;
+	UMag* Mag;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
 	FGameplayTag ImpactCueTag;
 	
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+	UPROPERTY()
 	UWeaponStats* Stats = nullptr;
 };

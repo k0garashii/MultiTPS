@@ -17,6 +17,7 @@ public class MultiGAS : ModuleRules
 			"AIModule",
 			"StateTreeModule",
 			"GameplayStateTreeModule",
+			"GameplayTags",
 			"UMG",
 			"Slate"
 		});
@@ -24,20 +25,7 @@ public class MultiGAS : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayAbilities" });
 
 		PublicIncludePaths.AddRange(new string[] {
-			"MultiGAS",
-			"MultiGAS/Variant_Platforming",
-			"MultiGAS/Variant_Platforming/Animation",
-			"MultiGAS/Variant_Combat",
-			"MultiGAS/Variant_Combat/AI",
-			"MultiGAS/Variant_Combat/Animation",
-			"MultiGAS/Variant_Combat/Gameplay",
-			"MultiGAS/Variant_Combat/Interfaces",
-			"MultiGAS/Variant_Combat/UI",
-			"MultiGAS/Variant_SideScrolling",
-			"MultiGAS/Variant_SideScrolling/AI",
-			"MultiGAS/Variant_SideScrolling/Gameplay",
-			"MultiGAS/Variant_SideScrolling/Interfaces",
-			"MultiGAS/Variant_SideScrolling/UI"
+			"MultiGAS"
 		});
 
 		// Uncomment if you are using Slate UI

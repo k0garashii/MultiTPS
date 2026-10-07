@@ -15,8 +15,25 @@
 void AMultiGASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if (PlayerWidgetClass)
+	{
+		PlayerUI = CreateWidget<UPlayerWidget>(GetWorld(), PlayerWidgetClass);
+
+		if (PlayerUI)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Player UI Created"));
+			PlayerUI->AddToViewport();
+		}
+	}
+
 	if (WeaponRef)
 		Weapon = WeaponRef->GetDefaultObject<AWeapon>();
+	
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	InitMaxHealth();
+	InitHealth();
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Stats->GetHealthAttribute()).AddUObject(this, &AMultiGASCharacter::OnHealthChanged);
 }
 
 void AMultiGASCharacter::Tick(float DeltaSeconds)
@@ -52,6 +69,9 @@ AMultiGASCharacter::AMultiGASCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->FieldOfView = DefaultFOV;
 	FollowCamera->bUsePawnControlRotation = true;
+	
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	Stats = CreateDefaultSubobject<UPlayerStats>(TEXT("PlayerStats"));
 }
 
 void AMultiGASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -69,6 +89,12 @@ void AMultiGASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	}
 	else
 		UE_LOG(LogMultiGAS, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+}
+
+void AMultiGASCharacter::OnHealthChanged(const FOnAttributeChangeData& Data)
+{
+	if (PlayerUI)
+		PlayerUI->UpdateHealthBar(GetHealth(), GetMaxHealth());
 }
 
 void AMultiGASCharacter::Move(const FInputActionValue& Value)

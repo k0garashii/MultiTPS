@@ -20,7 +20,7 @@ class AMultiGASCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	AMultiGASCharacter();	
+	AMultiGASCharacter();
 	
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoMove(float Right, float Forward);
@@ -31,6 +31,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
 	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void DoShoot();
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void DoAim();
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void DoStopAiming();
@@ -39,6 +41,7 @@ public:
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 protected:
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
@@ -66,9 +69,9 @@ protected:
 	float DefaultFOV = 90.0f;
 	
 	UPROPERTY(EditAnywhere, Category="Weapon")
-	TSubclassOf<AWeapon> Weapon = nullptr;
+	TSubclassOf<AWeapon> WeaponRef = nullptr;
 	
-private: 
+private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
@@ -76,6 +79,8 @@ private:
 	
 	UPROPERTY()
 	UPlayerStats* Stats = nullptr;
+	UPROPERTY()
+	AWeapon* Weapon = nullptr;
 	
 	float DeltaTime = 0.f;
 };

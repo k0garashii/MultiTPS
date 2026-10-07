@@ -35,12 +35,17 @@ void AWeapon::OnAmmoChanged(const FOnAttributeChangeData& Data)
 
 void AWeapon::Shoot(AMultiGASCharacter* Character) const
 {
+	UWorld* World = Character->GetWorld();
 	FHitResult HitResult;
-	float TraceDistance = 1000000.f;
+	FCollisionQueryParams Parameters;
+	Parameters.AddIgnoredActor(Character);
+	float TraceDistance = 5000.f;
 	FVector Start = Character->GetFollowCamera()->GetComponentLocation();
 	FVector End = Start + Character->GetFollowCamera()->GetForwardVector() * TraceDistance;
 	
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility))
+	DrawDebugLine(World, Start, End, FColor::Red, true);
+	
+	if (World->LineTraceSingleByChannel(HitResult, Start, End, ECC_GameTraceChannel1, Parameters))
 	{
 		if (AMultiGASCharacter* Enemy = Cast<AMultiGASCharacter>(HitResult.GetActor()))
 		{
@@ -48,7 +53,6 @@ void AWeapon::Shoot(AMultiGASCharacter* Character) const
 			ApplyGameplayCue(Character, HitResult);
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Shoot"));
 }
 
 void AWeapon::ApplyHitEffectsToTarget(AActor* Source, AActor* Target, int Damages) const

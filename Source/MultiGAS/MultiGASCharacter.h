@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Weapon/Weapon.h"
@@ -15,7 +16,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(abstract)
-class AMultiGASCharacter : public ACharacter
+class AMultiGASCharacter : public ACharacter,public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -37,6 +38,10 @@ public:
 	
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	
+	// IGenericTeamAgentInterface
+	UFUNCTION(BlueprintCallable, Category = "Team")
+	virtual FGenericTeamId GetGenericTeamId() const override;
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;

@@ -10,7 +10,19 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "CombatPlayerState.h"
 #include "MultiGAS.h"
+
+FGenericTeamId AMultiGASCharacter::GetGenericTeamId() const
+{
+	GetTeamAttitudeTowards()
+	ACombatPlayerState* CombatPlayerState = GetPlayerState<ACombatPlayerState>();
+	if (CombatPlayerState)
+	{
+		return FGenericTeamId(CombatPlayerState->GetTeamId());
+	}
+	return FGenericTeamId::NoTeam;
+}
 
 void AMultiGASCharacter::Tick(float DeltaSeconds)
 {

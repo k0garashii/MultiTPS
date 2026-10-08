@@ -6,11 +6,13 @@
 void ADeathMatchGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
+	int32 DefaultId = 0;
 	for (const TPair<ETeamType,int32> TeamTypeInfo : StarterTeams)
 	{
 		for (int32 i = 0; i < TeamTypeInfo.Value; i++)
 		{
-			CreateTeam(TeamTypeInfo.Key,{});
+			CreateTeamWithId(DefaultId,TeamTypeInfo.Key,{});
+			DefaultId++;
 		}
 	}
 }
@@ -65,9 +67,9 @@ UClass* ADeathMatchGameMode::GetDefaultPawnClassForController_Implementation(ACo
 	return TeamParameter->TeamPawn;
 }
 
-UPlayerTeam* ADeathMatchGameMode::CreateTeam(ETeamType TeamType, TArray<APlayerController*> PlayerControllers)
+UPlayerTeam* ADeathMatchGameMode::CreateTeamWithId(int32 TeamId,ETeamType TeamType, TArray<APlayerController*> PlayerControllers)
 {
-	if (!TeamParameters.Contains(TeamType))
+	if (!TeamParameters.Contains(TeamType) || CreatedTeams.Contains(TeamId))
 	{
 		return nullptr;
 	}
@@ -77,7 +79,7 @@ UPlayerTeam* ADeathMatchGameMode::CreateTeam(ETeamType TeamType, TArray<APlayerC
 	
 	FTeams& TeamsForId = TeamsById.FindOrAdd(TeamType);
 	TeamsForId.PlayerTeams.Add(NewPlayerTeam);
-	OnNewTeamCreated(NewPlayerTeam,TeamType);
+	CreatedTeams.Add(TeamId,NewPlayerTeam);
 	
 	for (APlayerController* PlayerController : PlayerControllers)
 	{
@@ -86,6 +88,8 @@ UPlayerTeam* ADeathMatchGameMode::CreateTeam(ETeamType TeamType, TArray<APlayerC
 	
 	return NewPlayerTeam;
 }
+
+
 
 bool ADeathMatchGameMode::JoinTeam(UPlayerTeam* Team, APlayerController* PlayerController)
 {
@@ -154,11 +158,11 @@ UPlayerTeam* ADeathMatchGameMode::GetTeamByPlayer(APlayerController* Player)
 UPlayerTeam* ADeathMatchGameMode::GetSmallestTeam()
 {
 	UPlayerTeam* SmallestTeam = nullptr;
-	for (UPlayerTeam* Team : CreatedTeams)
+	for (TPair<int8,UPlayerTeam*> Element: CreatedTeams)
 	{
-		if (SmallestTeam == nullptr || Team->GetTeamSize() < SmallestTeam->GetTeamSize())
+		if (SmallestTeam == nullptr || Element.Value->GetTeamSize() < SmallestTeam->GetTeamSize())
 		{
-			SmallestTeam = Team;
+			SmallestTeam = Element.Value;
 		}
 	}
 	return SmallestTeam;
@@ -179,8 +183,3 @@ void ADeathMatchGameMode::OnPlayerJoinTeam_Implementation(APlayerController* Pla
 	}
 }
 
-void ADeathMatchGameMode::OnNewTeamCreated_Implementation(UPlayerTeam* NewTeam,ETeamType TeamType)
-{
-	CreatedTeams.Add(NewTeam);
-	OnTeamCreated.Broadcast(NewTeam,TeamType);
-}

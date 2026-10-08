@@ -10,7 +10,7 @@
 
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTeamCreated,UPlayerTeam*,NewTeam,ETeamType,TeamID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTeamCreated,UPlayerTeam*,NewTeam,int32,TeamId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerJoinedTeam,APlayerController*,Player,UPlayerTeam*,Team);
 USTRUCT()
 struct FTeams
@@ -30,7 +30,7 @@ public:
 	
 	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
 	UFUNCTION(BlueprintCallable)
-	UPlayerTeam* CreateTeam(ETeamType TeamType,TArray<APlayerController*> PlayerControllers);
+	UPlayerTeam* CreateTeamWithId(int32 TeamId,ETeamType TeamType,TArray<APlayerController*> PlayerControllers);
 	UFUNCTION(BlueprintCallable)
 	// Try to find a team with team id and joins it
 	UPlayerTeam* JoinTeam(ETeamType TeamType,APlayerController* PlayerControllers);
@@ -44,8 +44,6 @@ public:
 	UPlayerTeam* GetTeamByPlayer(APlayerController* Player);
 protected:
 	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal = L"") override;
-	UFUNCTION(BlueprintNativeEvent)
-	void OnNewTeamCreated(UPlayerTeam* NewTeam,ETeamType TeamType);
 	UFUNCTION(BlueprintNativeEvent)
 	void OnPlayerJoinTeam(APlayerController* Player,UPlayerTeam* Team);
 	
@@ -70,7 +68,7 @@ private:
 	TMap<ETeamType,FTeams> TeamsById;
 	UPROPERTY()
 	// Teams created in order, index is TeamId
-	TArray<TObjectPtr<UPlayerTeam>> CreatedTeams;
+	TMap<int8,TObjectPtr<UPlayerTeam>> CreatedTeams;
 	
 	
 };

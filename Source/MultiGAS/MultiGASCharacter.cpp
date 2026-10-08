@@ -16,7 +16,7 @@
 FGenericTeamId AMultiGASCharacter::GetGenericTeamId() const
 {
 	ACombatPlayerState* CombatPlayerState = GetPlayerState<ACombatPlayerState>();
-	if (CombatPlayerState)
+	if (CombatPlayerState && CombatPlayerState->HasATeam())
 	{
 		return FGenericTeamId(CombatPlayerState->GetTeamId());
 	}

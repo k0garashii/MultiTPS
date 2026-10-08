@@ -19,7 +19,8 @@ public class MultiGAS : ModuleRules
 			"GameplayStateTreeModule",
 			"GameplayTags",
 			"UMG",
-			"Slate"
+			"Slate",
+            "AdvancedSessions"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayAbilities" });

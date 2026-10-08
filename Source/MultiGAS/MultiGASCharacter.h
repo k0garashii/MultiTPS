@@ -81,6 +81,11 @@ protected:
 	float AimFOV = 30.0f;
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	float DefaultFOV = 90.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Character")
+	float DefaultWalkSpeed = 500.f;
+	UPROPERTY(EditAnywhere, Category = "Character")
+	float AimWalkSpeed = 250.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
 	int InitialHealth = 30;

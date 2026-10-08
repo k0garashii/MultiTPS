@@ -10,8 +10,18 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "CombatPlayerState.h"
 #include "MultiGAS.h"
 
+FGenericTeamId AMultiGASCharacter::GetGenericTeamId() const
+{
+	ACombatPlayerState* CombatPlayerState = GetPlayerState<ACombatPlayerState>();
+	if (CombatPlayerState && CombatPlayerState->HasATeam())
+	{
+		return FGenericTeamId(CombatPlayerState->GetTeamId());
+	}
+	return FGenericTeamId::NoTeam;
+}
 void AMultiGASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -67,7 +77,7 @@ AMultiGASCharacter::AMultiGASCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 500.f;
 	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
+	GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
@@ -180,11 +190,13 @@ void AMultiGASCharacter::DoAim()
 {
 	float TargetFOV = FMath::FInterpTo(FollowCamera->FieldOfView, AimFOV, DeltaTime, 10.f);
 	FollowCamera->SetFieldOfView(TargetFOV);
+	GetCharacterMovement()->MaxWalkSpeed = AimWalkSpeed;
+	
 }
 
 void AMultiGASCharacter::DoStopAiming()
 {
 	float TargetFOV = FMath::FInterpTo(FollowCamera->FieldOfView, DefaultFOV, DeltaTime, 10.f);
 	FollowCamera->SetFieldOfView(TargetFOV);
-	//FollowCamera->SetFieldOfView(DefaultFOV);
+	GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
 }

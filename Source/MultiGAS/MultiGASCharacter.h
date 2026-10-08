@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Weapon/Weapon.h"
@@ -16,7 +17,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(abstract)
-class AMultiGASCharacter : public ACharacter, public IAbilitySystemInterface
+class AMultiGASCharacter : public ACharacter, public IAbilitySystemInterface,public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -44,6 +45,9 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent; }
 	int GetHealth() const { return Stats->GetHealth(); }
 	int GetMaxHealth() const { return Stats->GetMaxHealth(); }
+	// IGenericTeamAgentInterface
+	UFUNCTION(BlueprintCallable, Category = "Team")
+	virtual FGenericTeamId GetGenericTeamId() const override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -77,6 +81,11 @@ protected:
 	float AimFOV = 30.0f;
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	float DefaultFOV = 90.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Character")
+	float DefaultWalkSpeed = 500.f;
+	UPROPERTY(EditAnywhere, Category = "Character")
+	float AimWalkSpeed = 250.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
 	int InitialHealth = 30;

@@ -28,9 +28,21 @@ void AMultiGASCharacter::BeginPlay()
 	}
 
 	if (WeaponRef)
-		Weapon = WeaponRef->GetDefaultObject<AWeapon>();
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = this;
+
+		Weapon = GetWorld()->SpawnActor<AWeapon>(
+			WeaponRef,
+			GetActorLocation(),
+			GetActorRotation(),
+			SpawnParams
+		);
+	}
 	
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	
 	InitMaxHealth();
 	InitHealth();
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Stats->GetHealthAttribute()).AddUObject(this, &AMultiGASCharacter::OnHealthChanged);
@@ -94,7 +106,7 @@ void AMultiGASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 void AMultiGASCharacter::OnHealthChanged(const FOnAttributeChangeData& Data)
 {
 	if (PlayerUI)
-		PlayerUI->UpdateHealthBar(GetHealth(), GetMaxHealth());
+		PlayerUI->UpdateHealthBar(Data.NewValue, GetMaxHealth());
 }
 
 void AMultiGASCharacter::Move(const FInputActionValue& Value)
